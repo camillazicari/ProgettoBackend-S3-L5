@@ -1,4 +1,6 @@
-USE Municipale
+CREATE DATABASE PoliziaMunicipale;
+
+USE PoliziaMunicipale;
 
 CREATE TABLE ANAGRAFICA (
     idanagrafica INT IDENTITY(1,1) PRIMARY KEY,
@@ -21,21 +23,19 @@ CREATE TABLE VERBALE (
     IndirizzoViolazione VARCHAR(100) NOT NULL,
     Nominativo_Agente VARCHAR(20) NOT NULL,
     DataTrascrizioneVerbale DATE NOT NULL,
-    Importo DECIMAL(10,2) NOT NULL,
+    Importo MONEY NOT NULL,
     DecurtamentoPunti INT NOT NULL,
 	idanagrafica INT NOT NULL,
    CONSTRAINT FK_ID_ANAGRAFICA FOREIGN KEY (idanagrafica) REFERENCES ANAGRAFICA(idanagrafica)
    );
 
-   CREATE TABLE VERBALE_VIOLAZIONE (
+CREATE TABLE VERBALE_VIOLAZIONE (
    id_verbale_violazione INT IDENTITY(1,1) PRIMARY KEY,
     idverbale INT NOT NULL,
     idviolazione INT NOT NULL,
     CONSTRAINT FK_ID_VERBALE FOREIGN KEY (idverbale) REFERENCES VERBALE(idverbale),
     CONSTRAINT FK_ID_VIOLAZIONE FOREIGN KEY (idviolazione) REFERENCES TIPO_VIOLAZIONE(idviolazione)
 );
-
-ALTER TABLE VERBALE ALTER COLUMN Importo MONEY NOT NULL;
 
 INSERT INTO ANAGRAFICA (Cognome, Nome, Indirizzo, Città, CAP, Cod_Fisc)
 VALUES
@@ -77,22 +77,21 @@ VALUES
 
 INSERT INTO VERBALE (DataViolazione, IndirizzoViolazione, Nominativo_Agente, DataTrascrizioneVerbale, Importo, DecurtamentoPunti, idanagrafica)
 VALUES
-('2025-02-01', 'Via Roma 1', 'Agente 1', '2025-02-02', 150.00, 2, 1),
-('2025-02-03', 'Via Milano 5', 'Agente 2', '2025-02-04', 200.00, 3, 2),
-('2025-02-10', 'Corso Vittorio 10', 'Agente 3', '2025-02-11', 120.00, 1, 3),
-('2025-02-15', 'Via Napoli 25', 'Agente 4', '2025-02-16', 80.00, 1, 4),
-('2025-02-20', 'Viale Trento 12', 'Agente 5', '2025-02-21', 100.00, 1, 5),
-('2025-02-22', 'Piazza Garibaldi 4', 'Agente 6', '2025-02-23', 250.00, 4, 6),
-('2025-02-24', 'Via Dante 7', 'Agente 7', '2025-02-25', 180.00, 2, 7),
-('2025-02-26', 'Viale Lazio 3', 'Agente 8', '2025-02-27', 90.00, 1, 8),
-('2025-02-28', 'Via Torino 15', 'Agente 9', '2025-03-01', 130.00, 2, 9),
-('2025-03-02', 'Via Milano 3', 'Agente 10', '2025-03-03', 110.00, 2, 10),
-('2025-03-04', 'Piazza del Popolo 2', 'Agente 11', '2025-03-05', 160.00, 3, 11),
-('2025-03-06', 'Via Marconi 20', 'Agente 12', '2025-03-07', 140.00, 2, 12),
-('2025-03-08', 'Via Garibaldi 11', 'Agente 13', '2025-03-09', 200.00, 3, 13),
-('2025-03-10', 'Viale Europa 22', 'Agente 14', '2025-03-11', 220.00, 3, 14),
-('2025-03-12', 'Via dei Mille 8', 'Agente 15', '2025-03-13', 90.00, 1, 15);
-
+('2005-02-01', 'Via Roma 1', 'Agente 1', '2005-02-02', 150.00, 2, 1),
+('2007-02-03', 'Via Milano 5', 'Agente 2', '2007-02-04', 200.00, 3, 2),
+('2009-02-10', 'Corso Vittorio 10', 'Agente 3', '2009-02-11', 570.00, 1, 3),
+('2010-02-15', 'Via Napoli 25', 'Agente 4', '2010-02-16', 80.00, 1, 4),
+('2009-02-20', 'Viale Trento 12', 'Agente 5', '2009-02-21', 100.00, 1, 5),
+('2008-02-22', 'Piazza Garibaldi 4', 'Agente 6', '2008-02-23', 250.00, 4, 6),
+('2007-02-24', 'Via Dante 7', 'Agente 7', '2007-02-25', 580.00, 2, 7),
+('2010-02-26', 'Viale Lazio 3', 'Agente 8', '2010-02-27', 90.00, 1, 8),
+('2009-02-28', 'Via Torino 15', 'Agente 9', '2009-03-01', 130.00, 2, 9),
+('2004-03-02', 'Via Milano 3', 'Agente 10', '2004-03-03', 110.00, 2, 10),
+('2007-03-04', 'Piazza del Popolo 2', 'Agente 11', '2007-03-05', 160.00, 3, 11),
+('2006-03-06', 'Via Marconi 20', 'Agente 12', '2006-03-07', 140.00, 2, 12),
+('2009-03-08', 'Via Garibaldi 11', 'Agente 13', '2009-03-09', 450.00, 3, 13),
+('2010-03-10', 'Viale Europa 22', 'Agente 14', '2010-03-11', 220.00, 3, 14),
+('2009-03-12', 'Via dei Mille 8', 'Agente 15', '2009-03-13', 90.00, 7, 15);
 
 INSERT INTO VERBALE_VIOLAZIONE (idverbale, idviolazione)
 VALUES
@@ -111,6 +110,7 @@ VALUES
 (10, 13),
 (11, 14),
 (12, 15);
+
 
 --1--
 SELECT COUNT(*) AS TOTVERBALI FROM VERBALE;
@@ -140,8 +140,6 @@ INNER JOIN VERBALE V ON A.idanagrafica = V.idanagrafica
 WHERE A.Città = 'Palermo';
 
 --6--
-UPDATE VERBALE SET DataViolazione = '2009-03-21' WHERE Nominativo_Agente='Agente 5';
-
 SELECT A.Cognome, A.Nome, V.DataViolazione, V.IndirizzoViolazione, V.Importo, V.DecurtamentoPunti
 FROM ANAGRAFICA A
 INNER JOIN VERBALE V ON A.idanagrafica = V.idanagrafica
@@ -166,16 +164,12 @@ INNER JOIN VERBALE_VIOLAZIONE VV ON V.idverbale = VV.idverbale
 GROUP BY V.Nominativo_Agente;
 
 --11--
-UPDATE VERBALE SET DecurtamentoPunti = 7 WHERE Nominativo_Agente = 'Agente 15'
-
 SELECT A.Cognome, A.Nome, A.Indirizzo, V.DataViolazione, V.Importo, V.DecurtamentoPunti
 FROM ANAGRAFICA A
 INNER JOIN VERBALE V ON A.idanagrafica = V.idanagrafica
 WHERE V.DecurtamentoPunti > 5;
 
 --12--
-UPDATE VERBALE SET Importo = 570 WHERE Nominativo_Agente = 'Agente 3'
-
 SELECT A.Cognome, A.Nome, A.Indirizzo, V.DataViolazione, V.Importo, V.DecurtamentoPunti
 FROM ANAGRAFICA A
 INNER JOIN VERBALE V ON A.idanagrafica = V.idanagrafica
